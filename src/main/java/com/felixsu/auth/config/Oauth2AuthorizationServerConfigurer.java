@@ -34,7 +34,6 @@ import java.util.Arrays;
  */
 
 @EnableAuthorizationServer
-@PropertySource({ "classpath:persistence.properties" })
 @Configuration
 public class Oauth2AuthorizationServerConfigurer extends AuthorizationServerConfigurerAdapter {
 
@@ -44,11 +43,8 @@ public class Oauth2AuthorizationServerConfigurer extends AuthorizationServerConf
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Value("classpath:schema.sql")
-    private Resource schemaScript;
-
-    @Value("classpath:data.sql")
-    private Resource dataScript;
+    @Autowired
+    DataSource dataSource;
 
     @Override
     public void configure(final AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
@@ -57,7 +53,7 @@ public class Oauth2AuthorizationServerConfigurer extends AuthorizationServerConf
 
     @Override
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {// @formatter:off
-        clients.jdbc(dataSource());
+        clients.jdbc(dataSource);
     }
 
     @Override
@@ -83,34 +79,8 @@ public class Oauth2AuthorizationServerConfigurer extends AuthorizationServerConf
         return new CustomTokenEnhancer();
     }
 
-    // JDBC token store configuration
-    @Bean
-    public DataSourceInitializer dataSourceInitializer(final DataSource dataSource) {
-        final DataSourceInitializer initializer = new DataSourceInitializer();
-        initializer.setDataSource(dataSource);
-        initializer.setDatabasePopulator(databasePopulator());
-        return initializer;
-    }
-
-    private DatabasePopulator databasePopulator() {
-        final ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
-        populator.addScript(schemaScript);
-        populator.addScript(dataScript);
-        return populator;
-    }
-
-    @Bean
-    public DataSource dataSource() {
-        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-        dataSource.setUrl(env.getProperty("jdbc.url"));
-        dataSource.setUsername(env.getProperty("jdbc.user"));
-        dataSource.setPassword(env.getProperty("jdbc.pass"));
-        return dataSource;
-    }
-
     @Bean
     public TokenStore tokenStore() {
-        return new JdbcTokenStore(dataSource());
+        return new JdbcTokenStore(dataSource);
     }
 }

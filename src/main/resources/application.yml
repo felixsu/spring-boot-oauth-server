@@ -1,3 +1,13 @@
 logging:
   level:
     org.springframework.security: DEBUG
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/oauth2?createDatabaseIfNotExist=true
+    username: root
+    password:
+    driver-class-name: com.mysql.jdbc.Driver
