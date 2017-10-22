@@ -63,3 +63,16 @@ create table if not exists ClientDetails (
   additionalInformation VARCHAR(4096),
   autoApproveScopes VARCHAR(255)
 );
+
+create table if not exists users (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(255),
+  password VARCHAR(255),
+  name VARCHAR(255),
+  email VARCHAR(255)
+);
+
+create table if not exists privileges (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255)
+);

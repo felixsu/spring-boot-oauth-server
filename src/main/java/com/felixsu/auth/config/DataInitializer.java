@@ -30,7 +30,7 @@ public class DataInitializer {
 
     // JDBC token store configuration
     @Bean
-    public DataSourceInitializer dataSourceInitializer(final DataSource dataSource) {
+    public DataSourceInitializer dataSourceInitializer() {
         final DataSourceInitializer initializer = new DataSourceInitializer();
         initializer.setDataSource(dataSource);
         initializer.setDatabasePopulator(databasePopulator());

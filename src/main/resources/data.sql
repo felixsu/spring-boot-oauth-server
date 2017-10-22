@@ -21,4 +21,3 @@ INSERT INTO oauth_client_details
 VALUES
 	("app_client", "secret", "read,write,all_access",
 	"client_credentials", null, null, 3600, 36000, null, false);
-
