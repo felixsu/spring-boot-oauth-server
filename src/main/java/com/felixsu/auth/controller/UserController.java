@@ -1,12 +1,10 @@
 package com.felixsu.auth.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import com.felixsu.auth.model.User;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created on 10/16/17.
@@ -14,29 +12,22 @@ import java.util.Map;
  * @author felixsoewito
  */
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
-    @RequestMapping({ "/user", "/bearer/me" })
-    public Map<String, Object> user(Principal principal) {
-        Map<String, Object> map = new HashMap<>();
-        map.put("name", principal.getName());
-        map.put("principal", principal);
-        return map;
+    private List<User> users = new ArrayList<>();
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public Optional<User> getEmployee(@RequestParam String email) {
+        return users.stream().filter(x -> x.getEmail().equals(email)).findAny();
     }
 
     @RequestMapping(
             method = RequestMethod.GET,
-            path = "/bearer/hello"
+            path = "/details"
     )
     public Principal secureHelloWorld(Principal principal) {
-        return principal;
-    }
-
-    @RequestMapping(
-            method = RequestMethod.GET,
-            path = "/bearer/muser"
-    )
-    public Principal secureUser(Principal principal) {
         return principal;
     }
 }
