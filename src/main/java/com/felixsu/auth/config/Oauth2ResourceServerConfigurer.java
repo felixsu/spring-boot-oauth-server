@@ -16,6 +16,6 @@ public class Oauth2ResourceServerConfigurer extends ResourceServerConfigurerAdap
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/user").hasRole("ADMIN");
+        http.authorizeRequests().anyRequest().authenticated();
     }
 }
