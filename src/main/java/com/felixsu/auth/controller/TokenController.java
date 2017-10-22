@@ -24,7 +24,7 @@ public class TokenController {
 
     @RequestMapping(
             method = RequestMethod.DELETE,
-            value = "/oauth/token/revokeById/{token}")
+            value = "/tokens/revoke/{token}")
     @ResponseBody
     public Map<String, Object> revokeToken(@PathVariable String token) {
         Boolean removed = tokenServices.revokeToken(token);
@@ -49,13 +49,20 @@ public class TokenController {
         return tokenValues;
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/tokens/revokeRefreshToken/{tokenId:.*}")
+    @RequestMapping(method = RequestMethod.POST, value = "/tokens/revokeRefreshToken/{token}")
     @ResponseBody
-    public String revokeRefreshToken(@PathVariable String tokenId) {
+    public Map<String, Object> revokeRefreshToken(@PathVariable String token) {
+        Boolean removed = Boolean.FALSE;
         if (tokenStore instanceof JdbcTokenStore) {
-            ((JdbcTokenStore) tokenStore).removeRefreshToken(tokenId);
+            ((JdbcTokenStore) tokenStore).removeRefreshToken(token);
+            removed = Boolean.TRUE;
         }
-        return tokenId;
+
+        Map<String, Object> result = new LinkedHashMap<>();
+        result.put("isRemoved", removed);
+        result.put("token", token);
+
+        return result;
     }
 
 }
