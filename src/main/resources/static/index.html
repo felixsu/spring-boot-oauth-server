@@ -15,6 +15,9 @@
 </head>
 <body ng-app="app" ng-controller="home as home">
 <h1>Login</h1>
+<div class="container text-danger" ng-show="home.error">
+    There was an error (bad credentials).
+</div>
 <div class="container" ng-show="!home.authenticated">
     <div>
         With Facebook: <a href="/login/facebook">click here</a>
@@ -46,6 +49,12 @@
             self.authenticated = false;
         });
         self.logout = function() {
+
+            if ($location.absUrl().indexOf("error=true") >= 0) {
+                self.authenticated = false;
+                self.error = true;
+            }
+
             $http.post('logout', {}).success(function() {
                 self.authenticated = false;
                 $location.path("/");
